@@ -4,21 +4,20 @@ using TestAoniken.Models;
 
 namespace TestAoniken.Controllers
 {
-    [Route("api/publicaciones")] // Define la ruta base para todas las acciones del controlador
-    [ApiController] // Indica que el controlador responde a solicitudes HTTP API
+    [Route("api/publicaciones")]
+    [ApiController]
     public class PublicacionController : ControllerBase
     {
-        private readonly ApplicationDbContext _contexto; // DbContext para acceder a la base de datos
+        private readonly ApplicationDbContext _contexto;
 
         public PublicacionController(ApplicationDbContext contexto)
         {
-            _contexto = contexto; // Inicializa el DbContext en el constructor
+            _contexto = contexto;
         }
 
-        [HttpGet("pendientes")] // Define una ruta para obtener publicaciones pendientes
+        [HttpGet("pendientes")]
         public IActionResult ObtenerPublicacionesPendientes()
         {
-            // Obtiene las publicaciones pendientes de la base de datos y las convierte en un formato específico
             var publicacionesPendientes = _contexto.Publicaciones
                 .Where(p => p.PendienteAprobacion)
                 .Select(p => new
@@ -29,43 +28,69 @@ namespace TestAoniken.Controllers
                 })
                 .ToList();
 
-            // Devuelve las publicaciones pendientes en formato JSON
             return Ok(publicacionesPendientes);
         }
 
-        [HttpPost("aprobar")] // Define una ruta para aprobar una publicación
+        [HttpPost("aprobar")]
         public IActionResult AprobarPublicacion([FromBody] int idPublicacion)
         {
-            // Busca la publicación en la base de datos por su ID
             var publicacion = _contexto.Publicaciones.Find(idPublicacion);
             if (publicacion == null)
             {
-                return NotFound(); // Devuelve un error 404 si la publicación no se encuentra
+                return NotFound();
             }
 
-            // Actualiza el estado de aprobación de la publicación y guarda los cambios en la base de datos
             publicacion.PendienteAprobacion = false;
             _contexto.SaveChanges();
 
-            // Devuelve una respuesta OK
             return Ok();
         }
 
-        [HttpPost("rechazar")] // Define una ruta para rechazar una publicación
+        [HttpPost("rechazar")]
         public IActionResult RechazarPublicacion([FromBody] int idPublicacion)
         {
-            // Busca la publicación en la base de datos por su ID
             var publicacion = _contexto.Publicaciones.Find(idPublicacion);
             if (publicacion == null)
             {
-                return NotFound(); // Devuelve un error 404 si la publicación no se encuentra
+                return NotFound();
             }
 
-            // Elimina la publicación de la base de datos y guarda los cambios
             _contexto.Publicaciones.Remove(publicacion);
             _contexto.SaveChanges();
 
-            // Devuelve una respuesta OK
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult ActualizarPublicacion(int id, [FromBody] Publicacion publicacionActualizada)
+        {
+            var publicacion = _contexto.Publicaciones.Find(id);
+            if (publicacion == null)
+            {
+                return NotFound();
+            }
+
+            publicacion.Titulo = publicacionActualizada.Titulo;
+            publicacion.Contenido = publicacionActualizada.Contenido;
+            // Actualiza otras propiedades segÃºn sea necesario
+
+            _contexto.SaveChanges();
+
+            return Ok(publicacion);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult EliminarPublicacion(int id)
+        {
+            var publicacion = _contexto.Publicaciones.Find(id);
+            if (publicacion == null)
+            {
+                return NotFound();
+            }
+
+            _contexto.Publicaciones.Remove(publicacion);
+            _contexto.SaveChanges();
+
             return Ok();
         }
     }
