@@ -15,6 +15,25 @@ namespace TestAoniken.Controllers
             _contexto = contexto; // Inicializa el contexto de la base de datos mediante inyección de dependencias
         }
 
+    [HttpGet]
+    [Route("listas")]
+    public dynamic listarUsuarios()
+    {
+        List<Usuario> usuarios = new List<Usuario>
+        {
+            new Usuario
+            {
+                Id = 0,
+                Nombre = "Marco",
+                Rol = "Usuario"
+            }
+        };
+
+        return usuarios;
+    }
+        
+
+
         // Método para obtener las publicaciones pendientes de aprobación
         [HttpGet("pendientes")]
         public IActionResult ObtenerPublicacionesPendientes()

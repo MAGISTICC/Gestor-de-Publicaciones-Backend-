@@ -4,30 +4,28 @@ using Microsoft.Extensions.DependencyInjection;
 using TestAoniken.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
 
 namespace TestAoniken
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // Este método se llama en tiempo de ejecución. Utiliza este método para agregar servicios al contenedor.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configurar DbContext para MySQL
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+                    new MySqlServerVersion(new Version(8, 2, 12))));
+
             services.AddControllers();
         }
 
-
-        // Este método se llama en tiempo de ejecución. Utiliza este método para configurar el pipeline de solicitudes HTTP.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
