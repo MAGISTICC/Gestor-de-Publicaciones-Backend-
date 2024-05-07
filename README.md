@@ -1,6 +1,6 @@
 # Gestor de Publicaciones (Test Aoniken)
 
-Este proyecto es un test desarrollado para la empresa Aoniken. Proporciona una API REST para gestionar publicaciones de blog.
+Este proyecto proporciona una API REST para gestionar publicaciones de blog.
 
 ## Configuración
 
