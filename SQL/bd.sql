@@ -2,7 +2,7 @@
 CREATE TABLE Usuarios (
     Id INT PRIMARY KEY,
     Nombre NVARCHAR(100) NOT NULL,
-    Rol NVARCHAR(50) NOT NULL
+    Rol NVARCHAR(10) NOT NULL
 );
 
 -- Script para crear la tabla de Publicaciones
