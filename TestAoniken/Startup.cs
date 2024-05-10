@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestAoniken.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using System.Data.SqlClient;
 
 namespace TestAoniken
 {
@@ -20,8 +21,8 @@ namespace TestAoniken
         {
             // Configurar DbContext para MySQL
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
-                    new MySqlServerVersion(new Version(8, 2, 12))));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
 
             services.AddControllers();
         }
